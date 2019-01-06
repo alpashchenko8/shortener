@@ -29,11 +29,9 @@ public class ShortenerConrtoller {
         try {
             URL url = new URL(original);
         } catch (MalformedURLException e ) {
-         //   e.printStackTrace();
+
             return ResponseEntity.badRequest().build();
         }
-//        boolean check = original.contains("://");
-//        if(!check) { return ResponseEntity.badRequest().build(); }
         Link link = new Link(original);
         link=linkDao.save(link);
         String response = "{ \"link\":\"/l/"+ link.getSortLink()+"\"}";
