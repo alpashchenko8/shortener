@@ -10,8 +10,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -20,11 +20,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 @Sql(value ="/create-link-before.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD )
-@Sql(value ="/link-after.sql",executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD )
+@Sql(value = "/link-delete.sql",executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD )
 public class ShortenerConrtollerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Test
+    @Sql(value = "/link-delete.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    public void generate() throws Exception {
+        this.mockMvc.perform(post("/generate")
+                .param("original","http://some-server.com/some/url/Generate"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        this.mockMvc.perform(post("/generate")
+                .param("original","/some/url/Generate"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     public void linkShortUrl() throws Exception {

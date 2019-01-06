@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @Controller
@@ -24,6 +26,14 @@ public class ShortenerConrtoller {
             method = RequestMethod.POST
     )
     public ResponseEntity generate(@RequestParam("original") String original){
+        try {
+            URL url = new URL(original);
+        } catch (MalformedURLException e ) {
+         //   e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+//        boolean check = original.contains("://");
+//        if(!check) { return ResponseEntity.badRequest().build(); }
         Link link = new Link(original);
         link=linkDao.save(link);
         String response = "{ \"link\":\"/l/"+ link.getSortLink()+"\"}";

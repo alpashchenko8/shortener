@@ -15,7 +15,7 @@ public class Link {
     private long rank;
 
     public Link(String originalLink) {
-        this.originalLink = originalLink;
+        setOriginalLink(originalLink);
         this.count = 0L;
     }
 
@@ -47,9 +47,7 @@ public class Link {
         return originalLink;
     }
 
-    public void setOriginalLink(String originalLink) {
-        this.originalLink = originalLink;
-    }
+    private void setOriginalLink(String originalLink) { this.originalLink = originalLink; }
     @Override
     public String toString() {
         return "Link{" + "id=" + id + "," +
